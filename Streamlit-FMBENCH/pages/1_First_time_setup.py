@@ -7,7 +7,7 @@ st.title("First Time Setup")
 st.markdown("This page is designed to get you up and running on EC2.")
 
 # Use columns to place text and button side by side
-col1, col2 = st.columns([3, 1])  # Adjust column widths as needed
+col1, col2 = st.columns([3, 1])
 
 with col1:
     st.write("")
@@ -40,6 +40,28 @@ with col2:
 # Divider
 st.write("---")
 
+
+# Upload Section for Huggingface API File
+st.header("Upload Hugging Face Token")
+
+# File uploader to upload hf_token file
+hf_token_file = st.file_uploader(f"Upload Hugging Face Token", type=["txt"])
+
+if hf_token_file is not None:
+    # Save the uploaded file temporarily or process it as needed
+    save_path = f"/tmp/{hf_token_file.name}"
+    with open(save_path, "wb") as f:
+        f.write(hf_token_file.getbuffer())
+    st.success(f"File '{hf_token_file.name}' uploaded successfully'!")
+
+    # Display uploaded file details
+    st.write("### Uploaded File Details:")
+    st.write(f"File name: {hf_token_file.name}")
+    st.write(f"File type: {hf_token_file.type}")
+    st.write(f"File size: {hf_token_file.size} bytes")
+
+st.write("---")
+
 # Upload Section for Tokenizer Files
 st.header("Upload Tokenizer for Specific Models")
 
@@ -51,7 +73,7 @@ model_selected = st.selectbox("Select the Model", models)
 
 # File uploader to upload tokenizer file
 tokenizer_file = st.file_uploader(
-    f"Upload the Tokenizer for {model_selected}", type=["json", "txt", "zip"]
+    f"Upload the Tokenizer for {model_selected}", type=["json"]
 )
 
 if tokenizer_file is not None:
@@ -76,12 +98,14 @@ st.header("Upload Config File for Selected Model")
 
 # File uploader to upload tokenizer file
 config_file = st.file_uploader(
-    f"Upload the config file for {model_selected}", type=["json", "txt", "zip"]
+    f"Upload the config file for {model_selected}", type=["json"]
 )
 
 if config_file is not None:
     # Save the uploaded file temporarily or process it as needed
-    save_path = f"/tmp/{config_file.name}"
+    save_path_dict = {'Llama3' : 'llama3/tokenizer'}
+    #WIP SAVE PATH DICT MAPPING
+    save_path = f"/tmp/fmbench-read/{config_file.name}"
     with open(save_path, "wb") as f:
         f.write(config_file.getbuffer())
     st.success(
@@ -93,3 +117,5 @@ if config_file is not None:
     st.write(f"File name: {config_file.name}")
     st.write(f"File type: {config_file.type}")
     st.write(f"File size: {config_file.size} bytes")
+
+st.write("---")
